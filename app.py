@@ -1,14 +1,10 @@
 from flask import Flask, render_template
 import pandas as pd
-import random
 
 app = Flask(__name__)
 
-# Load data
+# Load dummy data
 data = pd.read_csv("faults.csv")
-
-# Add dummy risk prediction (random number between 0 and 1)
-data["predicted_risk"] = [round(random.uniform(0, 1), 2) for _ in range(len(data))]
 
 @app.route("/")
 def home():
@@ -16,4 +12,6 @@ def home():
     return render_template("index.html", data=records)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
