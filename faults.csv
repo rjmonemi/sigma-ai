@@ -1,0 +1,4 @@
+equipment_id,location_lat,location_lon,last_maintenance_date,failure_occurred
+EQ001,32.7157,-117.1611,2024-05-10,No
+EQ002,32.7346,-117.1545,2023-12-01,Yes
+EQ003,32.7153,-117.1573,2024-01-25,No

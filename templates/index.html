@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SIGMA Dashboard</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1 class="text-center">SIGMA – Equipment Dashboard</h1>
+
+    <!-- Equipment Table -->
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Last Maintenance</th>
+          <th>Failure?</th>
+          <th>Risk Score</th>
+        </tr>
+      </thead>
+<tbody>
+  {% for row in data %}
+  <tr {% if row.predicted_risk >= 0.8 %} style="background-color: #f8d7da;" {% endif %}>
+    <td>{{ row.equipment_id }}</td>
+    <td>{{ row.last_maintenance_date }}</td>
+    <td>{{ row.failure_occurred }}</td>
+    <td>{{ row.predicted_risk }}</td>
+  </tr>
+  {% endfor %}
+</tbody>
+
+    </table>
+
+    <!-- Map -->
+    <h2 class="text-center">Equipment Map</h2>
+    <div id="map" style="height: 500px; margin-top: 20px;"></div>
+
+    <script>
+      var map = L.map('map').setView([32.7157, -117.1611], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      {% for row in data %}
+        L.marker([{{ row.location_lat }}, {{ row.location_lon }}])
+          .addTo(map)
+          .bindPopup("{{ row.equipment_id }}<br>Risk: {{ row.predicted_risk }}");
+      {% endfor %}
+    </script>
+  </div>
+</body>
+</html>
